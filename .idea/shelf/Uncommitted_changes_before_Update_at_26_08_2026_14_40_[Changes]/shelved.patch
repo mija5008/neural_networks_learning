@@ -1,0 +1,118 @@
+Index: KERAS/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/KERAS/main.py b/KERAS/main.py
+deleted file mode 100644
+--- a/KERAS/main.py	(revision 07a8f9172cd211a7e7bf7133f9b234a230ff6c0e)
++++ /dev/null	(revision 07a8f9172cd211a7e7bf7133f9b234a230ff6c0e)
+@@ -1,47 +0,0 @@
+-import tensorflow as tf
+-import numpy as np
+-import pandas as pd
+-import plotly.express as px
+-tf.__version__
+-from tensorflow.keras.models import Sequential
+-from tensorflow.keras.layers import Dense
+-from keras.layers import Activation
+-from tensorflow.keras.activations import linear, sigmoid, relu, softmax
+-# model = Sequential()
+-# #print(model)
+- # warstwa wejsciowa 4 neurony(units) 10 wejsc
+-#
+-# random_data  =sorted(np.random.randn(400))
+-# data = pd.DataFrame({'data': random_data,'linear':linear(random_data)})
+-# dataS = pd.DataFrame({'data': random_data,'sigmoid':sigmoid(random_data)})
+-# dataR = pd.DataFrame({'data': random_data,'relu':relu(random_data)})
+-# print(data.head())
+-# print(dataS.head())
+-# print(dataR.head())
+-#
+-# fig = px.line(dataS,x='data',y='sigmoid', width = 800, range_y=[-0.5, 2])
+-# figR = px.line(dataR,x='data',y='relu', width = 800, range_y=[-0.5, 2])
+-# #fig.show()
+-# #figR.show()
+-# #model.summary() # podsumowanie , param: d = (10+1)*4, d_1 = (4+1)*2, total = d +d_1 = 54
+-model1 = Sequential()
+-model1.add(Dense(units=8,activation= 'relu', input_shape=(10,)))
+-model1.add(Dense(units=1,activation= 'sigmoid'))
+-model1.summary()
+-model = Sequential()
+-model.add(Dense(units=8, activation='relu', input_shape=(10,)))
+-model.add(Dense(units=1, activation='sigmoid'))
+-model.summary()
+-#klasyfikacja binarna
+-model.compile(optimizer='rmsprop',
+-              loss='binary_crossentropy',
+-              metrics=['accuracy'])
+-
+-# klasyfikacja wieloklasowa
+-model.compile(optimizer='rmsprop',
+-              loss='categorical_crossentropy',
+-              metrics=['accuracy'])
+-
+-# regresja
+-model.compile(optimizer='rmsprop',
+-              loss='mse')
+\ No newline at end of file
+Index: KERAS/klasyfikacja  binarna.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/KERAS/klasyfikacja  binarna.py b/KERAS/klasyfikacja  binarna.py
+new file mode 100644
+--- /dev/null	(date 1787747768517)
++++ b/KERAS/klasyfikacja  binarna.py	(date 1787747768517)
+@@ -0,0 +1,47 @@
++import numpy as np
++import tensorflow as tf
++import pandas as pd
++from tensorflow import keras
++from keras.activations import relu, sigmoid
++from keras.models import Sequential
++from keras.layers import Dense, Dropout, Activation, Flatten
++tf.__version__
++data = np.random.randn(1000,150) # 1000 wierszy 150 kolumn
++labels = np.random.randint(2,size = (1000, 1)) # tablica 1000x1 z losowymi liczbami z zakresu [0,2)
++#czyli 0 lub 1  - etykiety klasyfikacji binarnej
++
++# print(data.shape)
++# print(labels.shape)
++# print(data[:3])
++# print(labels[:10])
++# model = Sequential()
++# model.add(Dense(units = 32, activation = 'relu', input_shape=(150,)))# Dense - warstwa gestopolaczona
++# model.add(Dense(units = 1, activation = 'sigmoid'))
++# model.compile(optimizer='rmsprop',
++#               loss='binary_crossentropy',
++#               metrics=['accuracy'])
++# model.fit(data, labels, epochs = 20 )
++#######################            BATCH_SIZE
++# model = Sequential()
++# model.add(Dense(units = 32, activation = 'relu', input_shape=(150,)))# Dense - warstwa gestopolaczona
++# model.add(Dense(units = 1, activation = 'sigmoid'))
++# model.compile(optimizer='rmsprop',
++#               loss='binary_crossentropy',
++#               metrics=['accuracy'])
++# model.fit(data, labels, epochs = 20, batch_size = 30 )
++model = Sequential()
++model.add(Dense(units = 32, activation = 'relu', input_shape=(150,)))# Dense - warstwa gestopolaczona
++model.add(Dense(units = 1, activation = 'sigmoid'))
++model.compile(optimizer='rmsprop',
++              loss='binary_crossentropy',
++              metrics=['accuracy'])
++history = model.fit(data, labels, epochs = 20, batch_size = 30, validation_split = 0.2, verbose = 0 )
++
++metrics = history.history
++print(metrics.keys())
++test_data = np.random.randn(5,150)
++labels = np.random.randint(2,size = (5, 1)) # tablica 1000x1 z losowymi liczbami z zakresu [0,2)
++probs = model.predict(test_data)
++print(probs)
++classes = (probs>0.5).astype(int)
++print(classes)
+\ No newline at end of file
+diff --git a/KERAS/klasyfikacja wieloskalowa.py b/KERAS/klasyfikacja wieloskalowa.py
+new file mode 100644
